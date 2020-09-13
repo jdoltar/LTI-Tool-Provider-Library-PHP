@@ -1230,15 +1230,8 @@ EOD;
             if ($http->send()) {
                 $this->extResponse = $http->response;
                 $this->extResponseHeaders = $http->responseHeaders;
-                try {
-                    $this->extDoc = new DOMDocument();
-                    $this->extDoc->loadXML($http->response);
-                    $this->extNodes = $this->domnodeToArray($this->extDoc->documentElement);
-                    if (isset($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor']) &&
-                        ($this->extNodes['imsx_POXHeader']['imsx_POXResponseHeaderInfo']['imsx_statusInfo']['imsx_codeMajor'] === 'success')) {
-                        $ok = true;
-                    }
-                } catch (\Exception $e) {
+                if(strpos($this->extResponse, "<imsx_codeMajor>success</imsx_codeMajor>") !== false) {
+                    $ok = true;
                 }
             }
             $this->extRequest = $http->request;
